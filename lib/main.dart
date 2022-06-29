@@ -3,6 +3,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:gup_sup/Screens/cameraScreen.dart';
 import 'package:gup_sup/Screens/homeScreen.dart';
+import 'package:gup_sup/Screens/loginSignUp.dart';
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -22,7 +23,7 @@ class GupSup extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Color(0xff06F1F2),
       ),
-      home: HomeScreen(),
+      home: LoginSignUp(),
     );
   }
 }
