@@ -1,16 +1,16 @@
 import 'dart:ui';
 import 'package:camera/camera.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gup_sup/Screens/cameraScreen.dart';
 import 'package:gup_sup/Screens/homeScreen.dart';
 import 'package:gup_sup/Screens/loginSignUp.dart';
 
-Future<void> main() async {
-  // Ensure that plugin services are initialized so that `availableCameras()`
-  // can be called before `runApp()`
-  WidgetsFlutterBinding.ensureInitialized();
-  DartPluginRegistrant.ensureInitialized();
+// Google services file has to be add to ios through xcode is remaining
 
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(GupSup());
 }
 

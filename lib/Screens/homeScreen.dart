@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gup_sup/Models/userModel.dart';
 import 'package:gup_sup/Screens/cameraScreen.dart';
 import 'package:gup_sup/Screens/selectContact.dart';
 import '../pages/cameraPage.dart';
@@ -11,6 +14,33 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  User? user = FirebaseAuth.instance.currentUser;
+  UserModel loggedInUser = UserModel();
+  String? profilePictureURL;
+
+  Future getData() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .get()
+        .then(
+          (value) => {
+            loggedInUser = UserModel.fromMap(value),
+            profilePictureURL = value['profilePictureURL'],
+          },
+        );
+    setState(() {
+      if (profilePictureURL != null) profilePictureURL;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getData();
+  }
+
   int selectedIndex = 0;
   final List<Widget> _screens = <Widget>[
     chatHomePage(),
@@ -63,12 +93,14 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: true,
-        actions: const [
+        actions: [
           Padding(
               padding: EdgeInsets.all(10.0),
               child: CircleAvatar(
                 radius: 20,
-                backgroundImage: AssetImage('images/myImage.jpeg'),
+                backgroundImage: profilePictureURL != null
+                    ? NetworkImage(profilePictureURL!) as ImageProvider
+                    : AssetImage('images/generalProfile.jpeg'),
               ))
         ],
       ),

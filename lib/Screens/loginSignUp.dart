@@ -51,31 +51,29 @@ class _LoginSignUpState extends State<LoginSignUp> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 50,
-                ),
-                child: Column(
-                  children: [
-                    Image.asset('images/gupsup.webp'),
-                    AnimatedTextKit(
-                      animatedTexts: [
-                        TypewriterAnimatedText(
-                          ' GupSup',
-                          textStyle: TextStyle(
-                            fontSize: 50,
-                            color: Color(0xff4E5152),
-                            fontWeight: FontWeight.w900,
-                          ),
-                          speed: Duration(
-                            milliseconds: 300,
-                          ),
+              Column(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 5,
+                  ),
+                  Image.asset('images/gupsup.jpeg'),
+                  AnimatedTextKit(
+                    animatedTexts: [
+                      TypewriterAnimatedText(
+                        ' GupSup',
+                        textStyle: const TextStyle(
+                          fontSize: 55,
+                          color: Color(0xff4E5152),
+                          fontWeight: FontWeight.w900,
                         ),
-                      ],
-                      totalRepeatCount: 1,
-                    ),
-                  ],
-                ),
+                        speed: const Duration(
+                          milliseconds: 100,
+                        ),
+                      ),
+                    ],
+                    totalRepeatCount: 1,
+                  ),
+                ],
               ),
               SizedBox(
                 height: MediaQuery.of(context).size.height / 4,
