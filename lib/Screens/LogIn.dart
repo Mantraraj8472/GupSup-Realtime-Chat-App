@@ -33,23 +33,42 @@ class _LogInState extends State<LogIn> {
         ),
       );
     } on FirebaseAuthException catch (e) {
+      setState(() {
+        isLoading = false;
+      });
       if (e.code == 'user-not-found') {
         const snackBar = SnackBar(
           content: Text(
             'No user found for that email.',
           ),
         );
-        // Find the ScaffoldMessenger in the widget tree
-        // and use it to show a SnackBar.
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       } else if (e.code == 'wrong-password') {
+        setState(() {
+          isLoading = false;
+        });
         const snackBar = SnackBar(
           content: Text(
             'Wrong password provided for that user.',
           ),
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      } else if (e.code == 'invalid-email') {
+        final snackBar = SnackBar(
+          content: Text('Invalid Email'),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      final snackBar = SnackBar(
+        content: Text(
+          e.toString(),
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
@@ -60,15 +79,14 @@ class _LogInState extends State<LogIn> {
         child: Stack(
           children: [
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 5,
                 ),
-                Center(
-                  child: Image(
-                    image: AssetImage('images/gupsup.webp'),
-                  ),
+                Image.asset(
+                  'images/gupsup.jpeg',
+                  height: MediaQuery.of(context).size.height / 5,
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 14,
@@ -80,7 +98,7 @@ class _LogInState extends State<LogIn> {
                   child: Text(
                     'Login',
                     style: TextStyle(
-                      fontSize: 60,
+                      fontSize: 50,
                       color: Color(0xff4E5152),
                       fontWeight: FontWeight.w800,
                     ),
@@ -234,6 +252,7 @@ class _LogInState extends State<LogIn> {
                     child: Align(
                       alignment: Alignment.center,
                       child: Container(
+                        height: MediaQuery.of(context).size.height,
                         color: Colors.black12,
                         child: SpinKitThreeBounce(
                           color: const Color(0xffE76F52),

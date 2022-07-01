@@ -43,6 +43,9 @@ class _SignUpState extends State<SignUp> {
       });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
+        setState(() {
+          isLoading = false;
+        });
         const snackBar = SnackBar(
           content: Text(
             'The password provided is too weak.',
@@ -50,6 +53,9 @@ class _SignUpState extends State<SignUp> {
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       } else if (e.code == 'email-already-in-use') {
+        setState(() {
+          isLoading = false;
+        });
         const snackBar = SnackBar(
           content: Text(
             'The account already exists for that email.',
@@ -58,6 +64,9 @@ class _SignUpState extends State<SignUp> {
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
       final snackBar = SnackBar(
         content: Text(
           e.toString(),
@@ -74,15 +83,15 @@ class _SignUpState extends State<SignUp> {
         child: Stack(
           children: [
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 8,
                 ),
-                Center(
-                    child: Image(
-                  image: AssetImage('images/gupsup.webp'),
-                )),
+                Image.asset(
+                  'images/gupsup.jpeg',
+                  height: MediaQuery.of(context).size.height / 5,
+                ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 14,
                 ),
@@ -93,7 +102,7 @@ class _SignUpState extends State<SignUp> {
                   child: Text(
                     'SignUp',
                     style: TextStyle(
-                      fontSize: 60,
+                      fontSize: 50,
                       color: Color(0xff4E5152),
                       fontWeight: FontWeight.w800,
                     ),
@@ -286,6 +295,7 @@ class _SignUpState extends State<SignUp> {
                     child: Align(
                       alignment: Alignment.center,
                       child: Container(
+                        height: MediaQuery.of(context).size.height,
                         color: Colors.black12,
                         child: SpinKitThreeBounce(
                           color: const Color(0xffE76F52),

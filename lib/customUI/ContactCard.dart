@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gup_sup/Models/contactCardModel.dart';
 
@@ -15,7 +16,7 @@ class ContactCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 25,
-                backgroundImage: AssetImage(contactData.profilePic),
+                backgroundImage: NetworkImage(contactData.profilePic),
               ),
               if (contactData.isSelected == true)
                 CircleAvatar(
@@ -31,11 +32,16 @@ class ContactCard extends StatelessWidget {
           ),
           title: Text(
             contactData.name,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19),
           ),
           subtitle: Text(
             contactData.status,
             style: TextStyle(color: Colors.blue),
+          ),
+          trailing: Icon(
+            CupertinoIcons.person_add_solid,
+            color: Color(0xff4E5152),
+            size: 25,
           ),
         ),
         Divider(

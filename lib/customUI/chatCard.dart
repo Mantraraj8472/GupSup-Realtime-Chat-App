@@ -26,7 +26,7 @@ class ChatCard extends StatelessWidget {
             child: ListTile(
               leading: CircleAvatar(
                 radius: 25,
-                backgroundImage: AssetImage(chatCardModel.profilePic),
+                backgroundImage: NetworkImage(chatCardModel.profilePic),
               ),
               title: Text(
                 chatCardModel.name,
@@ -34,10 +34,10 @@ class ChatCard extends StatelessWidget {
                     const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
               ),
               subtitle: Text(
-                chatCardModel.currentMessage,
+                'Current Message Here',
                 style: const TextStyle(color: Colors.blue),
               ),
-              trailing: Text(chatCardModel.time),
+              trailing: Text('Time will show here'),
             ),
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gup_sup/Models/userModel.dart';
 import 'package:gup_sup/Screens/cameraScreen.dart';
@@ -95,13 +96,14 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         actions: [
           Padding(
-              padding: EdgeInsets.all(10.0),
-              child: CircleAvatar(
-                radius: 20,
-                backgroundImage: profilePictureURL != null
-                    ? NetworkImage(profilePictureURL!) as ImageProvider
-                    : AssetImage('images/generalProfile.jpeg'),
-              ))
+            padding: EdgeInsets.all(8.0),
+            child: CircleAvatar(
+              radius: 28,
+              backgroundImage: profilePictureURL != null
+                  ? NetworkImage(profilePictureURL!) as ImageProvider
+                  : AssetImage('images/generalProfile.jpeg'),
+            ),
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -118,25 +120,25 @@ class _HomeScreenState extends State<HomeScreen> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.chat_outlined,
+              CupertinoIcons.chat_bubble_2_fill,
             ),
             label: 'Chats',
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.camera_alt,
+              CupertinoIcons.photo_camera_solid,
             ),
             label: 'Camera',
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.highlight_alt_sharp,
+              CupertinoIcons.profile_circled,
             ),
             label: 'Story',
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.groups,
+              CupertinoIcons.group_solid,
             ),
             label: 'Contacts',
           ),

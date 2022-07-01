@@ -48,7 +48,6 @@ class _LoginSignUpState extends State<LoginSignUp> {
       child: Scaffold(
         body: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Column(
@@ -56,7 +55,10 @@ class _LoginSignUpState extends State<LoginSignUp> {
                   SizedBox(
                     height: MediaQuery.of(context).size.height / 5,
                   ),
-                  Image.asset('images/gupsup.jpeg'),
+                  Image.asset(
+                    'images/gupsup.jpeg',
+                    height: MediaQuery.of(context).size.height / 5,
+                  ),
                   AnimatedTextKit(
                     animatedTexts: [
                       TypewriterAnimatedText(
