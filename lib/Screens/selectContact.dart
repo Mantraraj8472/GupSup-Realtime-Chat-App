@@ -18,10 +18,12 @@ class _SelectContactState extends State<SelectContact> {
   bool isLoading = false;
   User? loggedInUser = FirebaseAuth.instance.currentUser;
   List<String> userIDs = [];
+  List<String> friendsUIDs = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getFriendsList();
     getUsersList();
   }
 
@@ -48,7 +50,8 @@ class _SelectContactState extends State<SelectContact> {
           (QuerySnapshot querySnapshot) => {
             querySnapshot.docs.forEach(
               (doc) {
-                if (loggedInUser!.uid != doc['uid']) {
+                if (loggedInUser!.uid != doc['uid'] &&
+                    friendsUIDs.contains(doc['uid']) == false) {
                   contacts.add(
                     ContactCardModel(
                       name: doc['name'],
@@ -68,6 +71,27 @@ class _SelectContactState extends State<SelectContact> {
     });
   }
 
+  getFriendsList() async {
+    setState(() {
+      isLoading = true;
+    });
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(loggedInUser!.uid)
+        .collection('friends')
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+              querySnapshot.docs.forEach(
+                (doc) {
+                  friendsUIDs.add(doc['friendUID']);
+                },
+              ),
+            });
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   List<ContactCardModel> contacts = [];
 
   @override
@@ -78,8 +102,8 @@ class _SelectContactState extends State<SelectContact> {
               child: Container(
                 height: MediaQuery.of(context).size.height,
                 color: Colors.black12,
-                child: SpinKitThreeBounce(
-                  color: const Color(0xffE76F52),
+                child: const SpinKitThreeBounce(
+                  color: Color(0xffE76F52),
                 ),
               ),
             )
@@ -95,7 +119,7 @@ class _SelectContactState extends State<SelectContact> {
               ),
             ),
       floatingActionButton: SpeedDial(
-        backgroundColor: Color(0xffE76F52),
+        backgroundColor: const Color(0xffE76F52),
         icon: Icons.add,
         activeIcon: Icons.close,
         curve: Curves.bounceIn,

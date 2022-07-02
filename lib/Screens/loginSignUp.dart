@@ -69,7 +69,7 @@ class _LoginSignUpState extends State<LoginSignUp> {
                           fontWeight: FontWeight.w900,
                         ),
                         speed: const Duration(
-                          milliseconds: 100,
+                          milliseconds: 150,
                         ),
                       ),
                     ],
@@ -96,11 +96,11 @@ class _LoginSignUpState extends State<LoginSignUp> {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Color(0xffE76F52),
+                      color: const Color(0xffE76F52),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Center(
                         child: Text(
                           'LogIn',
@@ -114,7 +114,7 @@ class _LoginSignUpState extends State<LoginSignUp> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 25,
               ),
               Padding(
@@ -133,11 +133,11 @@ class _LoginSignUpState extends State<LoginSignUp> {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Color(0xffE76F52),
+                      color: const Color(0xffE76F52),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Center(
                         child: Text(
                           'SignUp',
