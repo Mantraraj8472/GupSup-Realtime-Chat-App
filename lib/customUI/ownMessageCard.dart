@@ -22,8 +22,7 @@ class OwnMessageCard extends StatelessWidget {
             constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width - 95),
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16),
+              padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16),
               child: Text(
                 'Helluu... aafafa gqg tqtw twqw qggqg gtwt gwgewrt ewrt',
                 style: TextStyle(

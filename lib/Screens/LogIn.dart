@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gup_sup/Screens/homeScreen.dart';
 
 class LogIn extends StatefulWidget {
@@ -54,7 +53,7 @@ class _LogInState extends State<LogIn> {
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       } else if (e.code == 'invalid-email') {
-        final snackBar = SnackBar(
+        const snackBar = SnackBar(
           content: Text('Invalid Email'),
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -248,15 +247,13 @@ class _LogInState extends State<LogIn> {
               ],
             ),
             isLoading
-                ? Positioned.fill(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        height: MediaQuery.of(context).size.height,
-                        color: Colors.black12,
-                        child: SpinKitThreeBounce(
-                          color: const Color(0xffE76F52),
-                        ),
+                ? Container(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.black12,
+                    child: const Center(
+                      child: SpinKitThreeBounce(
+                        color: Color(0xffE76F52),
                       ),
                     ),
                   )

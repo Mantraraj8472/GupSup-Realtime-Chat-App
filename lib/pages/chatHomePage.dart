@@ -16,10 +16,11 @@ class _chatHomePageState extends State<chatHomePage> {
   User? loggedInUser = FirebaseAuth.instance.currentUser;
 
   List<String> friendUIDs = [];
-  List<ChatCardModel> friendChatCards = [];
+  List<ChatCardModel> friendsChatCard = [];
   bool isLoading = false;
 
   getFriendsList() async {
+    print('Called getFriendList Time: ${DateTime.now().toString()}');
     setState(() {
       isLoading = true;
     });
@@ -33,12 +34,16 @@ class _chatHomePageState extends State<chatHomePage> {
                 friendUIDs.add(doc['friendUID']);
               })
             });
+
+    await getFriendsInfo();
     setState(() {
       isLoading = false;
     });
+    print('Called getFriendList over Time: ${DateTime.now().toString()}');
   }
 
   getFriendsInfo() async {
+    print('Called getFriendInfo Time: ${DateTime.now().toString()}');
     setState(() {
       isLoading = true;
     });
@@ -47,15 +52,18 @@ class _chatHomePageState extends State<chatHomePage> {
         .get()
         .then((QuerySnapshot querySnapshot) => {
               querySnapshot.docs.forEach((doc) {
-                friendChatCards.add(ChatCardModel(
-                    profilePic: doc['profilePictureURL'],
-                    name: doc['name'],
-                    isGroup: doc['isGroup']));
+                if (friendUIDs.contains(doc['uid']) == true) {
+                  friendsChatCard.add(ChatCardModel(
+                      profilePic: doc['profilePictureURL'],
+                      name: doc['name'],
+                      isGroup: doc['isGroup']));
+                }
               })
             });
     setState(() {
       isLoading = false;
     });
+    print('Called getFriendInfo over Time: ${DateTime.now().toString()}');
   }
 
   @override
@@ -63,11 +71,11 @@ class _chatHomePageState extends State<chatHomePage> {
     // TODO: implement initState
     super.initState();
     getFriendsList();
-    getFriendsInfo();
   }
 
   @override
   Widget build(BuildContext context) {
+    print(friendsChatCard.length);
     return isLoading
         ? Center(
             child: Container(
@@ -79,9 +87,9 @@ class _chatHomePageState extends State<chatHomePage> {
             ),
           )
         : ListView.builder(
-            itemCount: friendChatCards.length,
+            itemCount: friendsChatCard.length,
             itemBuilder: (context, index) =>
-                ChatCard(chatCardModel: friendChatCards[index]),
+                ChatCard(chatCardModel: friendsChatCard[index]),
           );
   }
 }

@@ -24,7 +24,6 @@ class _SelectContactState extends State<SelectContact> {
     // TODO: implement initState
     super.initState();
     getFriendsList();
-    getUsersList();
   }
 
   addFriend({required String friendUID, required int index}) async {
@@ -87,6 +86,8 @@ class _SelectContactState extends State<SelectContact> {
                 },
               ),
             });
+
+    await getUsersList();
     setState(() {
       isLoading = false;
     });

@@ -291,15 +291,13 @@ class _SignUpState extends State<SignUp> {
               ],
             ),
             isLoading
-                ? Positioned.fill(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        height: MediaQuery.of(context).size.height,
-                        color: Colors.black12,
-                        child: SpinKitThreeBounce(
-                          color: const Color(0xffE76F52),
-                        ),
+                ? Container(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.black12,
+                    child: const Center(
+                      child: SpinKitThreeBounce(
+                        color: Color(0xffE76F52),
                       ),
                     ),
                   )
