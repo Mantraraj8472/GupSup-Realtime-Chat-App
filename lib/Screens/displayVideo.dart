@@ -17,7 +17,6 @@ class _DisplayVideoState extends State<DisplayVideo> {
 
   _initVideoPlayer() async {
     _videoPlayerController = VideoPlayerController.file(File(widget.filePath));
-    // _videoPlayerController = VideoPlayerController.file(File(widget.filePath));
     await _videoPlayerController.initialize();
     await _videoPlayerController.setLooping(true);
     setState(() {
@@ -29,14 +28,14 @@ class _DisplayVideoState extends State<DisplayVideo> {
 
   @override
   void initState() {
-    // _initVideoPlayer();
+    _initVideoPlayer();
     super.initState();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    // _videoPlayerController.dispose();
+    _videoPlayerController.dispose();
     super.dispose();
   }
 
@@ -55,11 +54,11 @@ class _DisplayVideoState extends State<DisplayVideo> {
                   Container(
                     width: MediaQuery.of(context).size.width,
                     color: Colors.red,
-                    // child: isVideoPlayerControllerInitialised
-                    //     ? VideoPlayer(_videoPlayerController)
-                    //     : const Center(
-                    //         child: CircularProgressIndicator(),
-                    //       ),
+                    child: isVideoPlayerControllerInitialised
+                        ? VideoPlayer(_videoPlayerController)
+                        : const Center(
+                            child: CircularProgressIndicator(),
+                          ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -108,19 +107,19 @@ class _DisplayVideoState extends State<DisplayVideo> {
                     child: InkWell(
                       onTap: () {
                         setState(() {
-                          // _videoPlayerController.value.isPlaying
-                          //     ? _videoPlayerController.pause()
-                          //     : _videoPlayerController.play();
+                          _videoPlayerController.value.isPlaying
+                              ? _videoPlayerController.pause()
+                              : _videoPlayerController.play();
                         });
                       },
                       child: CircleAvatar(
                         radius: 33,
                         backgroundColor: Colors.black38,
                         child: Icon(
-                          Icons.play_arrow,
-                          // _videoPlayerController.value.isPlaying
-                          //     ? Icons.pause
-                          //     : Icons.play_arrow,
+                          // Icons.play_arrow,
+                          _videoPlayerController.value.isPlaying
+                              ? Icons.pause
+                              : Icons.play_arrow,
                           color: Colors.white,
                           size: 50,
                         ),

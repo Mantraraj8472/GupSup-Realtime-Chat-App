@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gup_sup/Screens/homeScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key}) : super(key: key);
@@ -218,11 +219,33 @@ class _LogInState extends State<LogIn> {
                     right: 25,
                   ),
                   child: InkWell(
-                    onTap: () {
-                      login(
-                        email: emailController.text,
-                        password: passwordController.text,
-                      );
+                    onTap: () async {
+                      if (emailController.text.isEmpty) {
+                        const snackBar = SnackBar(
+                          content: Text(
+                            'Email Can\'t be empty',
+                          ),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
+                      if (passwordController.text.isEmpty) {
+                        const snackBar = SnackBar(
+                          content: Text(
+                            'Password Can\'t be empty',
+                          ),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      } else {
+                        SharedPreferences pref =
+                            await SharedPreferences.getInstance();
+                        login(
+                          email: emailController.text,
+                          password: passwordController.text,
+                        );
+                        //It will save user email in email key
+                        // By this we can check if this email is present in key then goto chat screen else login screen
+                        pref.setString('email', emailController.text);
+                      }
                     },
                     child: Container(
                       decoration: BoxDecoration(

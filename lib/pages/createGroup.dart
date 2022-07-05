@@ -105,7 +105,7 @@ class _CreateGroupState extends State<CreateGroup> {
                     }
                   },
                   child: ContactCard(
-                    contactData: contacts[index - 1],
+                    contactCardModel: contacts[index - 1],
                   ),
                 );
               }),

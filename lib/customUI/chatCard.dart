@@ -8,25 +8,18 @@ class ChatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => IndividualChatScreen(
-                    chatCardModel: chatCardModel,
-                  ),
-                ),
-              );
-            },
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 8.0,
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: ListTile(
               leading: CircleAvatar(
                 radius: 25,
-                backgroundImage: NetworkImage(chatCardModel.profilePic),
+                backgroundImage: NetworkImage(chatCardModel.profilePic!),
               ),
               title: Text(
                 chatCardModel.name,
@@ -40,11 +33,11 @@ class ChatCard extends StatelessWidget {
               trailing: Text('Time will show here'),
             ),
           ),
-        ),
-        const Divider(
-          thickness: 0.5,
-        ),
-      ],
+          const Divider(
+            thickness: 0.5,
+          ),
+        ],
+      ),
     );
   }
 }

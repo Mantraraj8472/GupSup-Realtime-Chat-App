@@ -22,10 +22,16 @@ class DisplayPicture extends StatelessWidget {
                   Container(
                     width: MediaQuery.of(context).size.width,
                     color: Colors.red,
-                    //   child: Image.file(
-                    //     File(imagePath!),
-                    //     fit: BoxFit.cover,
-                    //   ),
+                    child: imagePath == null
+                        ? Container(
+                            color: Colors.black,
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height,
+                          )
+                        : Image.file(
+                            File(imagePath!),
+                            fit: BoxFit.cover,
+                          ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

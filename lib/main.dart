@@ -5,17 +5,24 @@ import 'package:flutter/material.dart';
 import 'package:gup_sup/Screens/cameraScreen.dart';
 import 'package:gup_sup/Screens/homeScreen.dart';
 import 'package:gup_sup/Screens/loginSignUp.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Google services file has to be add to ios through xcode is remaining
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(GupSup());
+  // Here we will check if user email is present in key or not
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  var email = pref.getString('email');
+  runApp(GupSup(
+    email: email,
+  ));
 }
 
 class GupSup extends StatelessWidget {
-  const GupSup({Key? key}) : super(key: key);
+  var email;
+  GupSup({Key? key, this.email}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +30,7 @@ class GupSup extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Color(0xff06F1F2),
       ),
-      home: LoginSignUp(),
+      home: email == null ? LoginSignUp() : HomeScreen(),
     );
   }
 }

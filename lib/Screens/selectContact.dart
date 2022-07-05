@@ -19,6 +19,7 @@ class _SelectContactState extends State<SelectContact> {
   User? loggedInUser = FirebaseAuth.instance.currentUser;
   List<String> userIDs = [];
   List<String> friendsUIDs = [];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -39,6 +40,11 @@ class _SelectContactState extends State<SelectContact> {
       isLoading = false;
       contacts.removeAt(index);
     });
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(friendUID)
+        .collection('friends')
+        .add({'friendUID': loggedInUser!.uid});
   }
 
   getUsersList() async {
@@ -115,7 +121,7 @@ class _SelectContactState extends State<SelectContact> {
                   addFriend(friendUID: userIDs[index], index: index);
                 },
                 child: ContactCard(
-                  contactData: contacts[index],
+                  contactCardModel: contacts[index],
                 ),
               ),
             ),

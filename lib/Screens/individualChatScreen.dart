@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gup_sup/Models/ChatCardModel.dart';
 import 'package:gup_sup/Screens/cameraScreen.dart';
 import 'package:gup_sup/customUI/othersMessageCard.dart';
@@ -18,7 +21,22 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
   // for focusing of the keyboard or textFormField
   FocusNode focusNode = FocusNode();
   // For adding emoji to textFormField we want textEditingController
-  TextEditingController _textEditingController = TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
+  String? profilePictureURL;
+  User? loggedInUser = FirebaseAuth.instance.currentUser;
+
+  getCurrentUser() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((value) => {
+              profilePictureURL = value['profilePictureURL'],
+              setState(() {
+                profilePictureURL;
+              }),
+            });
+  }
 
   @override
   // Here are we are adding listener in focusNode
@@ -32,6 +50,7 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
         });
       }
     });
+    getCurrentUser();
   }
 
   // emojiSelector method
@@ -39,8 +58,7 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
     return EmojiPicker(
       onEmojiSelected: (category, emoji) {
         setState(() {
-          _textEditingController.text =
-              _textEditingController.text + emoji.emoji;
+          _messageController.text = _messageController.text + emoji.emoji;
         });
       },
     );
@@ -85,7 +103,10 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
               padding: const EdgeInsets.only(bottom: 8),
               child: CircleAvatar(
                 radius: 20,
-                backgroundImage: AssetImage(widget.chatCardModel.profilePic),
+                backgroundImage: widget.chatCardModel.profilePic == null
+                    ? AssetImage('images/generalProfile.jpeg')
+                    : NetworkImage(widget.chatCardModel.profilePic!)
+                        as ImageProvider,
               ),
             ),
           ],
@@ -190,27 +211,47 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
             children: [
               Container(
                 height: MediaQuery.of(context).size.height - 160,
-                child: ListView(
-                  shrinkWrap: true,
-                  children: [
-                    OwnMessageCard(),
-                    OthersMessageCard(),
-                    OwnMessageCard(),
-                    OthersMessageCard(),
-                    OwnMessageCard(),
-                    OthersMessageCard(),
-                    OwnMessageCard(),
-                    OthersMessageCard(),
-                    OwnMessageCard(),
-                    OthersMessageCard(),
-                    OwnMessageCard(),
-                    OthersMessageCard(),
-                    OwnMessageCard(),
-                    OthersMessageCard(),
-                    OwnMessageCard(),
-                    OthersMessageCard(),
-                  ],
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(loggedInUser!.uid)
+                      .collection('messages')
+                      .doc(widget.chatCardModel.uid)
+                      .collection('indiMessages')
+                      .orderBy('time')
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasData == false) {
+                      return Container(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        color: Colors.black12,
+                        child: const Center(
+                          child: SpinKitThreeBounce(
+                            color: Color(0xffE76F52),
+                          ),
+                        ),
+                      );
+                    } else {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          var messageInfo = snapshot.data!.docs[index];
+                          return messageInfo['isOwn']
+                              ? OwnMessageCard(message: messageInfo['message'])
+                              : OthersMessageCard(
+                                  message: messageInfo['message']);
+                        },
+                      );
+                    }
+                  },
                 ),
+                // child: ListView(
+                //   shrinkWrap: true,
+                //   children: [],
+                // ),
               ),
               Align(
                 alignment: Alignment.bottomCenter,
@@ -243,12 +284,11 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
                                 ),
                                 color: const Color(0xffF5F5F5),
                                 child: TextFormField(
-                                  controller: _textEditingController,
+                                  controller: _messageController,
                                   focusNode: focusNode,
                                   textAlignVertical: TextAlignVertical.center,
-                                  keyboardType: TextInputType.multiline,
-                                  minLines: 1,
-                                  maxLines: 5,
+                                  // keyboardType: TextInputType.multiline,
+
                                   style: const TextStyle(
                                     fontSize: 20,
                                   ),
@@ -272,13 +312,6 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
                                     suffixIcon: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        // IconButton(
-                                        //   onPressed: () {},
-                                        //   icon: Icon(
-                                        //     Icons.attach_file,
-                                        //     color: Color(0xff4E5152),
-                                        //   ),
-                                        // ),
                                         IconButton(
                                           onPressed: () {
                                             Navigator.push(
@@ -311,7 +344,41 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
                                 backgroundColor: Color(0xffE76F52),
                                 radius: 24,
                                 child: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    if (_messageController.text.isNotEmpty) {
+                                      var dateTimeNow = DateTime.now();
+                                      var mssg = _messageController.text.trim();
+                                      _messageController.clear();
+                                      await FirebaseFirestore.instance
+                                          .collection('users')
+                                          .doc(loggedInUser!.uid)
+                                          .collection('messages')
+                                          .doc(widget.chatCardModel.uid)
+                                          .collection('indiMessages')
+                                          .doc()
+                                          .set({
+                                        'friendUID': widget.chatCardModel.uid,
+                                        'message': mssg,
+                                        'time': dateTimeNow,
+                                        'isOwn': true,
+                                      });
+                                      dateTimeNow = DateTime.now();
+                                      await FirebaseFirestore.instance
+                                          .collection('users')
+                                          .doc(widget.chatCardModel.uid)
+                                          .collection('messages')
+                                          .doc(loggedInUser!.uid)
+                                          .collection('indiMessages')
+                                          .doc()
+                                          .set({
+                                        'friendUID': loggedInUser!.uid,
+                                        'message': mssg,
+                                        'time': dateTimeNow,
+                                        'isOwn': false,
+                                      });
+                                      _messageController.clear();
+                                    }
+                                  },
                                   icon: Padding(
                                     padding: const EdgeInsets.only(left: 4),
                                     child: Icon(

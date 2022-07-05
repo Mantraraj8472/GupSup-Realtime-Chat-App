@@ -9,6 +9,7 @@ import 'package:gup_sup/Models/userModel.dart';
 import 'package:gup_sup/Screens/homeScreen.dart';
 import 'package:gup_sup/Screens/uploadProfile.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -23,56 +24,75 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController nameController = TextEditingController();
   final _auth = FirebaseAuth.instance;
   bool isLoading = false;
-  Future<void> signup({
-    required String name,
-    required String email,
-    required String password,
-  }) async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
+  Future<void> signup() async {
+    if (nameController.text.isEmpty) {
+      const snackBar = SnackBar(
+        content: Text(
+          'Name field can\'t be empty',
+        ),
       );
-      await storeDetailsToFirestore();
-      setState(() {
-        isLoading = false;
-      });
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (emailController.text.isEmpty) {
+      const snackBar = SnackBar(
+        content: Text(
+          'Email field can\'t be empty',
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (passwordController.text.isEmpty) {
+      const snackBar = SnackBar(
+        content: Text(
+          'Password field can\'t be empty',
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else {
+      try {
         setState(() {
-          isLoading = false;
+          isLoading = true;
         });
-        const snackBar = SnackBar(
-          content: Text(
-            'The password provided is too weak.',
-          ),
+        final credential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
         );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      } else if (e.code == 'email-already-in-use') {
+        await storeDetailsToFirestore();
         setState(() {
           isLoading = false;
         });
-        const snackBar = SnackBar(
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          setState(() {
+            isLoading = false;
+          });
+          const snackBar = SnackBar(
+            content: Text(
+              'The password provided is too weak.',
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        } else if (e.code == 'email-already-in-use') {
+          setState(() {
+            isLoading = false;
+          });
+          const snackBar = SnackBar(
+            content: Text(
+              'The account already exists for that email.',
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
+        final snackBar = SnackBar(
           content: Text(
-            'The account already exists for that email.',
+            e.toString(),
           ),
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      final snackBar = SnackBar(
-        content: Text(
-          e.toString(),
-        ),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
@@ -261,12 +281,11 @@ class _SignUpState extends State<SignUp> {
                     right: 25,
                   ),
                   child: InkWell(
-                    onTap: () {
-                      signup(
-                        name: nameController.text,
-                        email: emailController.text,
-                        password: passwordController.text,
-                      );
+                    onTap: () async {
+                      SharedPreferences pref =
+                          await SharedPreferences.getInstance();
+                      signup();
+                      pref.setString('email', emailController.text);
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -316,10 +335,12 @@ class _SignUpState extends State<SignUp> {
     userModel.uid = user.uid;
     userModel.name = nameController.text;
 
-    await firebaseFirestore
-        .collection('users')
-        .doc(user.uid)
-        .set(userModel.toMap());
+    await firebaseFirestore.collection('users').doc(user.uid).set({
+      'email': user.email,
+      'isGroup': false,
+      'name': nameController.text,
+      'uid': user.uid,
+    });
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(

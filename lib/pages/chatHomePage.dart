@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:gup_sup/Screens/individualChatScreen.dart';
 import 'package:gup_sup/customUI/chatCard.dart';
 import 'package:gup_sup/Models/ChatCardModel.dart';
 
@@ -20,7 +21,6 @@ class _chatHomePageState extends State<chatHomePage> {
   bool isLoading = false;
 
   getFriendsList() async {
-    print('Called getFriendList Time: ${DateTime.now().toString()}');
     setState(() {
       isLoading = true;
     });
@@ -39,11 +39,9 @@ class _chatHomePageState extends State<chatHomePage> {
     setState(() {
       isLoading = false;
     });
-    print('Called getFriendList over Time: ${DateTime.now().toString()}');
   }
 
   getFriendsInfo() async {
-    print('Called getFriendInfo Time: ${DateTime.now().toString()}');
     setState(() {
       isLoading = true;
     });
@@ -54,6 +52,7 @@ class _chatHomePageState extends State<chatHomePage> {
               querySnapshot.docs.forEach((doc) {
                 if (friendUIDs.contains(doc['uid']) == true) {
                   friendsChatCard.add(ChatCardModel(
+                      uid: doc['uid'],
                       profilePic: doc['profilePictureURL'],
                       name: doc['name'],
                       isGroup: doc['isGroup']));
@@ -63,7 +62,6 @@ class _chatHomePageState extends State<chatHomePage> {
     setState(() {
       isLoading = false;
     });
-    print('Called getFriendInfo over Time: ${DateTime.now().toString()}');
   }
 
   @override
@@ -75,7 +73,6 @@ class _chatHomePageState extends State<chatHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print(friendsChatCard.length);
     return isLoading
         ? Center(
             child: Container(
@@ -88,8 +85,21 @@ class _chatHomePageState extends State<chatHomePage> {
           )
         : ListView.builder(
             itemCount: friendsChatCard.length,
-            itemBuilder: (context, index) =>
-                ChatCard(chatCardModel: friendsChatCard[index]),
+            itemBuilder: (context, index) => InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => IndividualChatScreen(
+                      chatCardModel: friendsChatCard[index],
+                    ),
+                  ),
+                );
+              },
+              child: ChatCard(
+                chatCardModel: friendsChatCard[index],
+              ),
+            ),
           );
   }
 }

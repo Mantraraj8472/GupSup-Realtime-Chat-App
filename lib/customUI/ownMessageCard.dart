@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class OwnMessageCard extends StatelessWidget {
-  const OwnMessageCard({Key? key}) : super(key: key);
+  String message;
+  OwnMessageCard({required this.message, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class OwnMessageCard extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16),
               child: Text(
-                'Helluu... aafafa gqg tqtw twqw qggqg gtwt gwgewrt ewrt',
+                message,
                 style: TextStyle(
                   color: Colors.white,
                 ),

@@ -18,6 +18,7 @@ class UploadProfile extends StatefulWidget {
 
 class _UploadProfileState extends State<UploadProfile> {
   late String? profilePictureURL;
+  TextEditingController statusController = TextEditingController();
   File? image;
   final imagePicker = ImagePicker();
   bool isLoading = false;
@@ -56,7 +57,12 @@ class _UploadProfileState extends State<UploadProfile> {
     await FirebaseFirestore.instance
         .collection('users')
         .doc(widget.userId)
-        .update({'profilePictureURL': profilePictureURL});
+        .update(
+      {
+        'profilePictureURL': profilePictureURL,
+        'status': statusController.text,
+      },
+    );
     setState(() {
       isLoading = false;
     });
@@ -80,7 +86,7 @@ class _UploadProfileState extends State<UploadProfile> {
             Column(
               children: [
                 SizedBox(
-                  height: MediaQuery.of(context).size.height / 4,
+                  height: MediaQuery.of(context).size.height / 7,
                 ),
                 Stack(
                   children: [
@@ -110,13 +116,53 @@ class _UploadProfileState extends State<UploadProfile> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 18,
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 12.0,
+                    right: 18,
+                  ),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Row(
+                      children: [
+                        const SizedBox(
+                          width: 14,
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            autofocus: false,
+                            controller: statusController,
+                            onSaved: (value) {
+                              statusController.text = value!;
+                            },
+                            decoration: kTextFieldDecoration.copyWith(
+                                hintText: 'Status'),
+                            style: const TextStyle(
+                              color: Color(0xff4E5152),
+                              fontSize: 25,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 20,
+                ),
                 const Center(
-                  child: Text(
-                    'Please set your profile picture',
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xff4E5152),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: 20,
+                      right: 20,
+                    ),
+                    child: Text(
+                      'Please set your profile picture and status',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xff4E5152),
+                      ),
                     ),
                   ),
                 ),
@@ -131,15 +177,19 @@ class _UploadProfileState extends State<UploadProfile> {
                   child: InkWell(
                     onTap: () async {
                       if (image != null) {
-                        await uploadImage().whenComplete(
-                          () =>
-                              showSnackBar(msg: 'Image Uploaded Successfully'),
-                        );
-                        await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => HomeScreen(),
-                          ),
-                        );
+                        if (statusController.text.isEmpty) {
+                          showSnackBar(msg: 'Status can\'t be empty');
+                        } else {
+                          await uploadImage().whenComplete(
+                            () => showSnackBar(
+                                msg: 'Image Uploaded Successfully'),
+                          );
+                          await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => HomeScreen(),
+                            ),
+                          );
+                        }
                       } else {
                         showSnackBar(msg: 'Please select an image');
                       }
@@ -174,12 +224,16 @@ class _UploadProfileState extends State<UploadProfile> {
                   ),
                   child: InkWell(
                     onTap: () async {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HomeScreen(),
-                        ),
-                      );
+                      if (statusController.text.isEmpty) {
+                        showSnackBar(msg: 'Status field can\'t be empty');
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomeScreen(),
+                          ),
+                        );
+                      }
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -204,14 +258,13 @@ class _UploadProfileState extends State<UploadProfile> {
               ],
             ),
             isLoading
-                ? Positioned.fill(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        color: Colors.black12,
-                        child: SpinKitThreeBounce(
-                          color: const Color(0xffE76F52),
-                        ),
+                ? Container(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.black12,
+                    child: const Center(
+                      child: SpinKitThreeBounce(
+                        color: Color(0xffE76F52),
                       ),
                     ),
                   )
@@ -222,3 +275,14 @@ class _UploadProfileState extends State<UploadProfile> {
     );
   }
 }
+
+const kTextFieldDecoration = InputDecoration(
+  hintText: 'Enter a value',
+  contentPadding: EdgeInsets.only(bottom: 5.0, left: 5.0),
+  enabledBorder: UnderlineInputBorder(
+    borderSide: BorderSide(color: Colors.grey, width: 1),
+  ),
+  focusedBorder: UnderlineInputBorder(
+    borderSide: BorderSide(color: Color(0xff4E5152), width: 2),
+  ),
+);

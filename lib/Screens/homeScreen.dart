@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:gup_sup/Models/userModel.dart';
 import 'package:gup_sup/Screens/cameraScreen.dart';
 import 'package:gup_sup/Screens/selectContact.dart';
+import 'package:gup_sup/Screens/updateProfile.dart';
+import 'package:gup_sup/Screens/uploadProfile.dart';
 import '../pages/cameraPage.dart';
 import '../pages/chatHomePage.dart';
 
@@ -46,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = <Widget>[
     chatHomePage(),
     Container(),
-    Text('Index 2 screen page'),
+    UpdateProfile(),
     SelectContact(),
   ];
 
@@ -134,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(
               CupertinoIcons.profile_circled,
             ),
-            label: 'Story',
+            label: 'Profile',
           ),
           BottomNavigationBarItem(
             icon: Icon(
