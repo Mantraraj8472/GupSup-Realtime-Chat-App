@@ -84,9 +84,12 @@ class _LogInState extends State<LogIn> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 5,
                 ),
-                Image.asset(
-                  'images/gupsup.jpeg',
-                  height: MediaQuery.of(context).size.height / 5,
+                Hero(
+                  tag: 'logo',
+                  child: Image.asset(
+                    'images/gupsup.jpeg',
+                    height: MediaQuery.of(context).size.height / 5,
+                  ),
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 14,

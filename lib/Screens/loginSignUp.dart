@@ -11,24 +11,10 @@ class LoginSignUp extends StatefulWidget {
 }
 
 class _LoginSignUpState extends State<LoginSignUp> {
-  // late AnimationController _animationController;
-  // late Animation _animation;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // _animationController = AnimationController(
-    //   vsync: this,
-    //   duration: Duration(milliseconds: 1500),
-    // );
-    // _animation =
-    //     CurvedAnimation(parent: _animationController, curve: Curves.bounceOut);
-    // _animationController.forward();
-    //
-    // _animation.addListener(() {
-    //   setState(() {});
-    // });
   }
 
   @override
@@ -53,11 +39,14 @@ class _LoginSignUpState extends State<LoginSignUp> {
               Column(
                 children: [
                   SizedBox(
-                    height: MediaQuery.of(context).size.height / 5,
+                    height: MediaQuery.of(context).size.height / 6,
                   ),
-                  Image.asset(
-                    'images/gupsup.jpeg',
-                    height: MediaQuery.of(context).size.height / 5,
+                  Hero(
+                    tag: 'logo',
+                    child: Image.asset(
+                      'images/gupsup.jpeg',
+                      height: MediaQuery.of(context).size.height / 4.3,
+                    ),
                   ),
                   AnimatedTextKit(
                     animatedTexts: [
