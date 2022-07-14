@@ -1,11 +1,10 @@
+import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gup_sup/Screens/displayVideo.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:video_player/video_player.dart';
+import 'package:image_picker/image_picker.dart';
 import 'displayPicture.dart';
 
 class CameraScreen extends StatefulWidget {
@@ -212,13 +211,11 @@ class _CameraScreenState extends State<CameraScreen> {
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
-                                          isCameraFront =
-                                              isCameraFront ? false : true;
+                                          isCameraFront ^= true;
                                         });
-                                        int cameraPos = isCameraFront ? 1 : 0;
                                         _cameraController = CameraController(
-                                            _cameras[cameraPos],
-                                            ResolutionPreset.max);
+                                            _cameras[isCameraFront ? 1 : 0],
+                                            ResolutionPreset.high);
                                       },
                                       child: Icon(
                                         CupertinoIcons.switch_camera_solid,
