@@ -21,17 +21,17 @@ class _CreateGroupState extends State<CreateGroup> {
   List<ContactCardModel> contacts = [
     ContactCardModel(
       name: 'Mantraraj',
-      profilePic: 'images/myImage.jpeg',
+      profilePictureURL: 'images/myImage.jpeg',
       status: 'Har Har Mahadev',
     ),
     ContactCardModel(
       name: 'Baljot',
-      profilePic: 'images/myImage.jpeg',
+      profilePictureURL: 'images/myImage.jpeg',
       status: 'Jay Jalaram',
     ),
     ContactCardModel(
       name: 'Archit',
-      profilePic: 'images/myImage.jpeg',
+      profilePictureURL: 'images/myImage.jpeg',
       status: ':))',
     ),
   ];
