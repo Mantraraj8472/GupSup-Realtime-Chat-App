@@ -52,10 +52,12 @@ class _chatHomePageState extends State<chatHomePage> {
               querySnapshot.docs.forEach((doc) {
                 if (friendUIDs.contains(doc['uid']) == true) {
                   friendsChatCard.add(ChatCardModel(
-                      uid: doc['uid'],
-                      profilePic: doc['profilePictureURL'],
-                      name: doc['name'],
-                      isGroup: doc['isGroup']));
+                    uid: doc['uid'],
+                    profilePic: doc['profilePictureURL'],
+                    name: doc['name'],
+                    isGroup: doc['isGroup'],
+                    status: doc['status'],
+                  ));
                 }
               })
             });

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   UserModel loggedInUser = UserModel();
   String? profilePictureURL;
 
-  Future getData() async {
+  getData() async {
     await FirebaseFirestore.instance
         .collection('users')
         .doc(user!.uid)
@@ -29,11 +31,12 @@ class _HomeScreenState extends State<HomeScreen> {
         .then(
           (value) => {
             loggedInUser = UserModel.fromMap(value),
-            profilePictureURL = value['profilePictureURL'],
           },
         );
     setState(() {
-      if (profilePictureURL != null) profilePictureURL;
+      if (loggedInUser.profilePictureURL != null) {
+        profilePictureURL = loggedInUser.profilePictureURL;
+      }
     });
   }
 
