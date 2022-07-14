@@ -1,13 +1,15 @@
 class ContactCardModel {
-  late String name;
-  late String profilePic;
-  late String status;
+  String? name;
+  String? profilePictureURL;
+  String? status;
   bool isSelected = false;
+  String? uid;
 
   ContactCardModel({
     required this.name,
-    required this.profilePic,
+    required this.profilePictureURL,
     required this.status,
     this.isSelected = false,
+    this.uid,
   });
 }

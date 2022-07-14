@@ -6,13 +6,14 @@ class UserModel {
   late String? status;
   late bool? isGroup = false;
 
-  UserModel(
-      {this.uid,
-      this.name,
-      this.email,
-      this.profilePictureURL,
-      this.status,
-      this.isGroup});
+  UserModel({
+    this.uid,
+    this.name,
+    this.email,
+    this.profilePictureURL,
+    this.status,
+    this.isGroup,
+  });
 
   // data from server
   factory UserModel.fromMap(map) {
@@ -21,16 +22,8 @@ class UserModel {
       name: map['name'],
       email: map['email'],
       profilePictureURL: map['profilePictureURL'],
+      status: map['status'],
+      isGroup: map['isGroup'],
     );
-  }
-
-  // Sending data to server
-  Map<String, dynamic> toMap() {
-    return {
-      'uid': uid,
-      'name': name,
-      'email': email,
-      'profilePictureURL': profilePictureURL,
-    };
   }
 }

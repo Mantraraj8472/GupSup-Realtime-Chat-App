@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class ChatCardModel {
-  late String name;
+  String? name;
   String? currentMessage;
   String? time;
-  late String? profilePic;
-  late bool? isGroup;
-  String uid;
+  String? profilePic;
+  bool? isGroup;
+  String? uid;
+  String? status;
 
   ChatCardModel({
     required this.uid,
@@ -15,5 +16,6 @@ class ChatCardModel {
     this.currentMessage,
     this.time,
     required this.isGroup,
+    this.status,
   });
 }
