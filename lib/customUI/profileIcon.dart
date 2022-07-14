@@ -37,7 +37,7 @@ class _ProfileIconState extends State<ProfileIcon> {
           SizedBox(
             height: 5,
           ),
-          Text(widget.contacts.name),
+          Text(widget.contacts.name!),
         ],
       ),
     );
