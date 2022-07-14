@@ -22,15 +22,19 @@ class ChatCard extends StatelessWidget {
                 backgroundImage: NetworkImage(chatCardModel.profilePic!),
               ),
               title: Text(
-                chatCardModel.name,
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                chatCardModel.name!,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 19,
+                ),
               ),
               subtitle: Text(
-                'Current Message Here',
-                style: const TextStyle(color: Colors.blue),
+                chatCardModel.status!,
+                style: const TextStyle(
+                  color: Colors.blue,
+                  fontSize: 15,
+                ),
               ),
-              trailing: Text('Time will show here'),
             ),
           ),
           const Divider(

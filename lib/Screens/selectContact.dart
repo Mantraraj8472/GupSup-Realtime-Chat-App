@@ -17,9 +17,7 @@ class SelectContact extends StatefulWidget {
 class _SelectContactState extends State<SelectContact> {
   bool isLoading = false;
   User? loggedInUser = FirebaseAuth.instance.currentUser;
-  List<String> userIDs = [];
   List<String> friendsUIDs = [];
-
   @override
   void initState() {
     // TODO: implement initState
@@ -35,7 +33,8 @@ class _SelectContactState extends State<SelectContact> {
         .collection('users')
         .doc(loggedInUser!.uid)
         .collection('friends')
-        .add({'friendUID': friendUID});
+        .doc(friendUID)
+        .set({'friendUID': friendUID});
     setState(() {
       isLoading = false;
       contacts.removeAt(index);
@@ -44,7 +43,8 @@ class _SelectContactState extends State<SelectContact> {
         .collection('users')
         .doc(friendUID)
         .collection('friends')
-        .add({'friendUID': loggedInUser!.uid});
+        .doc(loggedInUser!.uid)
+        .set({'friendUID': loggedInUser!.uid});
   }
 
   getUsersList() async {
@@ -60,11 +60,11 @@ class _SelectContactState extends State<SelectContact> {
                   contacts.add(
                     ContactCardModel(
                       name: doc['name'],
-                      profilePic: doc['profilePictureURL'],
+                      profilePictureURL: doc['profilePictureURL'],
                       status: doc['status'],
+                      uid: doc['uid'],
                     ),
                   );
-                  userIDs.add(doc['uid']);
                 }
               },
             ),
@@ -118,7 +118,7 @@ class _SelectContactState extends State<SelectContact> {
               itemCount: contacts.length,
               itemBuilder: (context, index) => InkWell(
                 onTap: () {
-                  addFriend(friendUID: userIDs[index], index: index);
+                  addFriend(friendUID: contacts[index].uid!, index: index);
                 },
                 child: ContactCard(
                   contactCardModel: contacts[index],

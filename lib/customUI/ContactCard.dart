@@ -16,7 +16,8 @@ class ContactCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 25,
-                backgroundImage: NetworkImage(contactCardModel.profilePic),
+                backgroundImage:
+                    NetworkImage(contactCardModel.profilePictureURL!),
               ),
               if (contactCardModel.isSelected == true)
                 CircleAvatar(
@@ -31,11 +32,11 @@ class ContactCard extends StatelessWidget {
             ],
           ),
           title: Text(
-            contactCardModel.name,
+            contactCardModel.name!,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19),
           ),
           subtitle: Text(
-            contactCardModel.status,
+            contactCardModel.status!,
             style: TextStyle(color: Colors.blue),
           ),
           trailing: Icon(
