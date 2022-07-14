@@ -24,6 +24,7 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   String? profilePictureURL;
   User? loggedInUser = FirebaseAuth.instance.currentUser;
+  ScrollController scrollController = ScrollController();
 
   getCurrentUser() async {
     await FirebaseFirestore.instance
@@ -64,6 +65,7 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -99,15 +101,15 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: CircleAvatar(
-                radius: 20,
-                backgroundImage: widget.chatCardModel.profilePic == null
-                    ? AssetImage('images/generalProfile.jpeg')
-                    : NetworkImage(widget.chatCardModel.profilePic!)
-                        as ImageProvider,
-              ),
+            SizedBox(
+              width: 4,
+            ),
+            CircleAvatar(
+              radius: 20,
+              backgroundImage: widget.chatCardModel.profilePic == null
+                  ? AssetImage('images/generalProfile.jpeg')
+                  : NetworkImage(widget.chatCardModel.profilePic!)
+                      as ImageProvider,
             ),
           ],
         ),
@@ -120,12 +122,8 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.chatCardModel.name,
+                  widget.chatCardModel.name!,
                   style: const TextStyle(color: Colors.black, fontSize: 18.5),
-                ),
-                const Text(
-                  'Last seen today at 3:45',
-                  style: TextStyle(color: Colors.teal, fontSize: 13),
                 ),
               ],
             ),
@@ -195,7 +193,12 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        color: Colors.white54,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('images/chat_background.jpeg'),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: WillPopScope(
           onWillPop: () {
             if (showEmojiPicker == 1) {
@@ -207,10 +210,9 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
             }
             return Future.value(false);
           },
-          child: Stack(
+          child: Column(
             children: [
-              Container(
-                height: MediaQuery.of(context).size.height - 160,
+              Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
                       .collection('users')
@@ -218,7 +220,7 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
                       .collection('messages')
                       .doc(widget.chatCardModel.uid)
                       .collection('indiMessages')
-                      .orderBy('time')
+                      .orderBy('time', descending: true)
                       .snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -235,6 +237,8 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
                       );
                     } else {
                       return ListView.builder(
+                        reverse: true,
+                        controller: scrollController,
                         shrinkWrap: true,
                         itemCount: snapshot.data!.docs.length,
                         itemBuilder: (context, index) {
@@ -345,6 +349,13 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
                                 radius: 24,
                                 child: IconButton(
                                   onPressed: () async {
+                                    scrollController.animateTo(
+                                      scrollController.position.minScrollExtent,
+                                      duration: const Duration(
+                                        milliseconds: 100,
+                                      ),
+                                      curve: Curves.easeOut,
+                                    );
                                     if (_messageController.text.isNotEmpty) {
                                       var dateTimeNow = DateTime.now();
                                       var mssg = _messageController.text.trim();
@@ -376,7 +387,6 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
                                         'time': dateTimeNow,
                                         'isOwn': false,
                                       });
-                                      _messageController.clear();
                                     }
                                   },
                                   icon: Padding(
