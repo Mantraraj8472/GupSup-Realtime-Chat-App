@@ -56,7 +56,8 @@ class _SelectContactState extends State<SelectContact> {
             querySnapshot.docs.forEach(
               (doc) {
                 if (loggedInUser!.uid != doc['uid'] &&
-                    friendsUIDs.contains(doc['uid']) == false) {
+                    friendsUIDs.contains(doc['uid']) == false &&
+                    doc['isGroup'] == false) {
                   contacts.add(
                     ContactCardModel(
                       name: doc['name'],

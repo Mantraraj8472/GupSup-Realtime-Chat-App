@@ -22,6 +22,7 @@ class _UploadProfileState extends State<UploadProfile> {
   File? image;
   final imagePicker = ImagePicker();
   bool isLoading = false;
+
   pickImageMethod() async {
     setState(() {
       isLoading = true;
@@ -41,7 +42,7 @@ class _UploadProfileState extends State<UploadProfile> {
   }
 
   // uploading file to firestore storage and getting url of that image
-  Future uploadImage() async {
+  Future uploadProfile() async {
     setState(() {
       isLoading = true;
     });
@@ -53,7 +54,7 @@ class _UploadProfileState extends State<UploadProfile> {
     await ref.putFile(image!);
     profilePictureURL = await ref.getDownloadURL();
 
-    // saving URL to firestore database
+    // saving URL and status to firestore database
     await FirebaseFirestore.instance
         .collection('users')
         .doc(widget.userId)
@@ -180,7 +181,7 @@ class _UploadProfileState extends State<UploadProfile> {
                         if (statusController.text.isEmpty) {
                           showSnackBar(msg: 'Status can\'t be empty');
                         } else {
-                          await uploadImage().whenComplete(
+                          await uploadProfile().whenComplete(
                             () => showSnackBar(
                                 msg: 'Image Uploaded Successfully'),
                           );

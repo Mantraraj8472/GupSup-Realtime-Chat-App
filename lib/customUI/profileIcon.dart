@@ -13,15 +13,22 @@ class _ProfileIconState extends State<ProfileIcon> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 10.0, left: 8),
+      padding: const EdgeInsets.only(
+        top: 10.0,
+        left: 8,
+        right: 10,
+      ),
       child: Column(
         children: [
           Stack(
             alignment: Alignment.bottomRight,
-            children: const [
+            children: [
               CircleAvatar(
                 radius: 25,
-                backgroundImage: AssetImage('images/myImage.jpeg'),
+                backgroundImage: widget.contacts.profilePictureURL != null
+                    ? NetworkImage(widget.contacts.profilePictureURL!)
+                        as ImageProvider
+                    : AssetImage('images/myImage.jpeg'),
               ),
               CircleAvatar(
                 radius: 11,
@@ -34,10 +41,12 @@ class _ProfileIconState extends State<ProfileIcon> {
               )
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
-          Text(widget.contacts.name!),
+          Text(widget.contacts.name!.length <= 8
+              ? widget.contacts.name!
+              : '${widget.contacts.name!.substring(0, 5)}...'),
         ],
       ),
     );
